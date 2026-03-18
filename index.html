@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VP 66 | Member Portal</title>
     <style>
         :root {
@@ -33,40 +33,51 @@
             top: 0;
             z-index: 1000;
             border-bottom: 2px solid var(--primary);
-            display: flex;
-            justify-content: center;
         }
 
-        .nav-container { display: flex; }
+        .nav-container { 
+            display: flex; 
+            justify-content: center;
+            overflow-x: auto; /* Biar bisa scroll kalau menu kepanjangan di HP */
+            white-space: nowrap;
+        }
+
         .nav-item { position: relative; }
         .nav-link {
-            color: white; text-decoration: none; padding: 20px 25px;
+            color: white; text-decoration: none; padding: 15px 15px;
             display: block; font-weight: 900; text-transform: uppercase;
-            letter-spacing: 3px; cursor: pointer;
+            letter-spacing: 1px; cursor: pointer; font-size: 0.8rem;
         }
 
         .dropdown-kasta {
             position: absolute; top: 100%; left: 0; background: #000;
-            min-width: 220px; display: none; border: 1px solid #333;
+            min-width: 180px; display: none; border: 1px solid #333;
         }
 
         .nav-item:hover > .dropdown-kasta { display: block; }
         .kasta-item { position: relative; border-bottom: 1px solid #222; }
+        
         .dropdown-nama {
             position: absolute; top: 0; left: 100%; background: #050505;
-            min-width: 200px; display: none; border-left: 2px solid var(--primary);
+            min-width: 150px; display: none; border-left: 2px solid var(--primary);
+        }
+
+        /* Mobile Adjustments for Dropdown */
+        @media (max-width: 600px) {
+            .dropdown-nama { left: 50%; top: 100%; }
         }
 
         .kasta-item:hover .dropdown-nama { display: block; }
         .kasta-item > a, .dropdown-nama a {
-            padding: 15px 20px; display: block; color: #888; text-decoration: none; font-size: 0.8rem;
+            padding: 12px 15px; display: block; color: #888; text-decoration: none; font-size: 0.75rem;
             transition: 0.2s; cursor: pointer; text-transform: uppercase;
         }
         .dropdown-nama a:hover { background: var(--primary); color: #fff; font-weight: bold; }
 
         /* --- PAGE SYSTEM --- */
         .page {
-            display: none; padding: 150px 20px 60px; min-height: 100vh;
+            display: none; padding: 100px 15px 40px; min-height: 100vh;
+            box-sizing: border-box;
             animation: fadeIn 0.4s ease-in-out;
         }
         .page.active { display: block; }
@@ -79,46 +90,51 @@
         /* --- HOME --- */
         #home { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         .logo-main { 
-            font-size: clamp(4rem, 20vw, 12rem); font-weight: 900; 
-            color: #fff; text-shadow: 5px 5px var(--primary);
+            font-size: clamp(3rem, 15vw, 10rem); font-weight: 900; 
+            color: #fff; text-shadow: 3px 3px var(--primary);
             cursor: pointer; transition: 0.3s; margin: 0;
         }
-        .logo-main:hover { transform: scale(1.05); text-shadow: 0 0 30px var(--primary); }
-        .sub-text { letter-spacing: 10px; color: var(--primary); font-weight: bold; margin-top: 10px; }
+        .sub-text { letter-spacing: 5px; color: var(--primary); font-weight: bold; margin-top: 10px; font-size: 0.9rem; }
 
         /* --- PROFILE LAYOUT --- */
         .profile-grid {
             max-width: 1100px; margin: 0 auto;
-            display: grid; grid-template-columns: 350px 1fr; gap: 60px;
+            display: grid; grid-template-columns: 350px 1fr; gap: 30px;
         }
 
         .photo-side img {
             width: 100%; border-radius: 5px; border: 1px solid #444;
-            box-shadow: 10px 10px 0px var(--primary);
+            box-shadow: 8px 8px 0px var(--primary);
         }
 
         /* --- STAT BARS --- */
-        .stat-container { margin-top: 25px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 5px; border: 1px solid #222; }
-        .stat-row { margin-bottom: 12px; }
-        .stat-label { font-size: 0.65rem; color: #777; font-weight: 900; text-transform: uppercase; display: flex; justify-content: space-between; }
+        .stat-container { margin-top: 20px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 5px; border: 1px solid #222; }
+        .stat-row { margin-bottom: 10px; }
+        .stat-label { font-size: 0.6rem; color: #777; font-weight: 900; text-transform: uppercase; display: flex; justify-content: space-between; }
         .stat-label span:last-child { color: #fff; }
-        .bar-outer { background: #111; height: 8px; margin-top: 5px; border-radius: 10px; border: 1px solid #333; overflow: hidden; }
-        .bar-inner { height: 100%; width: 0; transition: 2s cubic-bezier(0.1, 0, 0.2, 1); }
+        .bar-outer { background: #111; height: 6px; margin-top: 5px; border-radius: 10px; border: 1px solid #333; overflow: hidden; }
+        .bar-inner { height: 100%; width: 0; transition: 1.5s cubic-bezier(0.1, 0, 0.2, 1); }
         
         .hp-bar { background: var(--hp); }
         .stamina-bar { background: var(--stamina); }
         .skill-bar { background: var(--skill); }
 
-        .info-side h1 { font-size: 4rem; margin: 0; font-weight: 900; color: #fff; border-bottom: 5px solid var(--primary); display: inline-block; }
-        .rank-tag { display: block; margin-top: 10px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; }
-        .content-block { margin-top: 30px; }
-        .content-block h3 { color: var(--primary); text-transform: uppercase; font-size: 0.8rem; margin-bottom: 5px; letter-spacing: 1px; }
-        .content-block p { color: #bbb; line-height: 1.6; font-size: 1rem; margin: 0; }
+        .info-side h1 { font-size: 2.5rem; margin: 0; font-weight: 900; color: #fff; border-bottom: 4px solid var(--primary); display: inline-block; }
+        .rank-tag { display: block; margin-top: 5px; font-size: 1rem; font-weight: bold; letter-spacing: 1px; }
+        .content-block { margin-top: 20px; }
+        .content-block h3 { color: var(--primary); text-transform: uppercase; font-size: 0.75rem; margin-bottom: 5px; }
+        .content-block p { color: #bbb; line-height: 1.5; font-size: 0.95rem; margin: 0; }
         
         .kill-list { list-style: none; padding: 0; margin-top: 10px; }
-        .kill-list li { padding: 8px; background: rgba(255,0,60,0.05); border-left: 4px solid var(--primary); margin-bottom: 5px; font-family: monospace; font-size: 0.85rem; color: #ff94ab; }
+        .kill-list li { padding: 8px; background: rgba(255,0,60,0.05); border-left: 4px solid var(--primary); margin-bottom: 5px; font-family: monospace; font-size: 0.8rem; color: #ff94ab; }
 
-        @media (max-width: 850px) { .profile-grid { grid-template-columns: 1fr; } .info-side h1 { font-size: 2.5rem; } }
+        /* RESPONSIVE BREAKPOINT */
+        @media (max-width: 850px) { 
+            .profile-grid { grid-template-columns: 1fr; gap: 20px; } 
+            .info-side h1 { font-size: 2rem; }
+            .nav-link { padding: 15px 10px; letter-spacing: 1px; }
+            .page { padding-top: 80px; }
+        }
     </style>
 </head>
 <body>
@@ -165,45 +181,45 @@
         const members = [
             { 
                 id: 'p1', name: 'GUZO', rank: 'PENGUASA', color: '--gold', hp: '100%', st: '95%', sk: '100%', skName: 'AUTHORITY', img: 'https://image2url.com/r2/default/images/1773818996702-1be2ce2f-2c90-42c6-9e12-057220153f14.jpg',
-                sikap: 'tidak takut siapapun kecuali TUHAN YME, perkataan beliau adalah mutlak, tidak dapat dibantah jika dibantah seseorang itu akan di teleport ke toilet bawah secara tiba tiba dan....',
-                kekuatan: 'tendangan muaycroy, hook monyet, dapat menlport orang seecara tidak terbatas',
-                catatan: ['dicari pa riko karena memakai mic dan mengumumkan semua murid untuk ke WJ setelah sekolah', 'kabur dari acara pramuka dan ditemukan oleh satpam sedeang ngelem dan nyinte', 'berantam diluar skolah hingga dijuluki Railway Outlaw']
+                sikap: 'Tidak takut siapapun kecuali TUHAN YME. Perkataan beliau mutlak.',
+                kekuatan: 'Tendangan muaycroy, hook monyet, teleport tak terbatas.',
+                catatan: ['Dicari Pak Riko (Insiden Mic)', 'Kabur dari pramuka', 'Railway Outlaw']
             },
             { 
                 id: 'p2', name: 'LUIGI', rank: 'PENGUASA', color: '--gold', hp: '90%', st: '85%', sk: '98%', skName: 'INTELLECT', img: 'https://image2url.com/r2/default/images/1773819080532-62fa2fe8-27d9-4ef2-b584-d89057fa33fa.jpg',
-                sikap: 'Dingin dan penuh perhitungan. Luigi adalah otak di balik ekspansi wilayah VP 66.',
-                kekuatan: 'JJ',
-                catatan: ['Cyber Syndicate Leader', 'Eksportir Gelap Jalur Utara']
+                sikap: 'Dingin dan penuh perhitungan. Otak ekspansi wilayah VP 66.',
+                kekuatan: 'JJ (Jurus Jitu)',
+                catatan: ['Cyber Syndicate Leader', 'Eksportir Jalur Utara']
             },
             { 
                 id: 'j1', name: 'SALIM', rank: 'JENDRAL', color: '--silver', hp: '95%', st: '90%', sk: '92%', skName: 'LEADERSHIP', img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Salim',
-                sikap: 'Disiplin tinggi dan setia kawan. Salim adalah jembatan antara Penguasa dan para Panglima.',
-                kekuatan: 'Ahli persenjataan berat dan koordinasi serangan berskala besar.',
-                catatan: ["Batalyon Tentara Bayaran 'Iron Fist'", 'Penghianat Internal VP 66']
+                sikap: 'Disiplin tinggi dan setia kawan. Jembatan komunikasi internal.',
+                kekuatan: 'Koordinasi serangan berskala besar.',
+                catatan: ["Batalyon 'Iron Fist'", 'Penghianat Internal']
             },
             { 
                 id: 'pa1', name: 'ABRAHAM', rank: 'PANGLIMA', color: '--cyan', hp: '98%', st: '100%', sk: '95%', skName: 'COMBAT', img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Eky',
-                sikap: 'Agresif dan berani. Tidak pernah mundur selangkah pun dalam menjaga kehormatan VP 66.',
-                kekuatan: 'Ahli beladiri taktis dan serangan frontal cepat.',
+                sikap: 'Agresif dan berani menjaga kehormatan VP 66.',
+                kekuatan: 'Ahli beladiri taktis dan serangan frontal.',
                 catatan: ['Leader Geng Srigala Hitam', 'Pasukan Elit Bayangan']
             },
             { 
                 id: 'pa2', name: 'GABRIEL', rank: 'PANGLIMA TEMPUR', color: '--cyan', hp: '92%', st: '88%', sk: '97%', skName: 'SPEED', img: 'https://image2url.com/r2/default/images/1773819124630-84bf3881-2363-42d1-805c-8890f5f594b3.jpg',
-                sikap: 'Sedikit Gay, pencinta perempuan gempal, jagoan tangga uks, biasanya dijuluki pembantai kesiswaan',
-                kekuatan: 'bisa merobohkan tembok zulkarnain, dapat memanggil yangtuj dan makjuj.',
-                catatan: ['p#k yul1#$[penguasa kubu mate]', 'kelah hefanyah[sang penghancur hati ipril]']
+                sikap: 'Jagoan tangga UKS, pembantai kesiswaan.',
+                kekuatan: 'Merobohkan tembok Zulkarnain, memanggil Yangtuj.',
+                catatan: ['Penguasa kubu mate', 'Penghancur hati Ipril']
             },
             { 
                 id: 'pa3', name: 'KELVIN', rank: 'PANGLIMA TEMPUR', color: '--cyan', hp: '100%', st: '100%', sk: '90%', skName: 'STAMINA', img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kelvin',
-                sikap: 'Pantang menyerah dan keras kepala. Kelvin adalah benteng berjalan bagi rekan-rekannya.',
-                kekuatan: 'Ketahanan fisik luar biasa dan ahli dalam pertarungan jalanan brutal.',
-                catatan: ['The Butcher of Underground', "Geng Motor 'Red Skulls'"]
+                sikap: 'Benteng berjalan bagi rekan-rekannya.',
+                kekuatan: 'Ketahanan fisik luar biasa.',
+                catatan: ['The Butcher', "Geng Motor 'Red Skulls'"]
             },
             { 
                 id: 'pa4', name: 'IGNACIO', rank: 'PANGLIMA TEMPUR', color: '--cyan', hp: '85%', st: '92%', sk: '94%', skName: 'PRECISION', img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ignacio',
-                sikap: 'Elegan namun mematikan. Ignacio percaya bahwa serangan yang efektif adalah satu serangan yang tepat sasaran.',
-                kekuatan: 'Ahli senjata tajam dan serangan titik vital.',
-                catatan: ["Master Duel Pedang 'Kuro'", 'Penyusup Black Ops']
+                sikap: 'Elegan namun mematikan. Percaya pada satu serangan tepat.',
+                kekuatan: 'Ahli senjata tajam dan titik vital.',
+                catatan: ["Master Duel 'Kuro'", 'Penyusup Black Ops']
             }
         ];
 
@@ -257,12 +273,11 @@
             if(target) {
                 target.classList.add('active');
                 const bars = target.querySelectorAll('.bar-inner');
-                bars.forEach(bar => {
-                    bar.style.width = '0';
-                    setTimeout(() => {
+                setTimeout(() => {
+                    bars.forEach(bar => {
                         bar.style.width = bar.getAttribute('data-val');
-                    }, 150);
-                });
+                    });
+                }, 100);
             }
             window.scrollTo(0,0);
         }

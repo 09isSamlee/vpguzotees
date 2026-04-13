@@ -1,207 +1,326 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VP 66 | Member Portal</title>
-    <style>
-        :root {
-            --primary: #ff003c; 
-            --gold: #ffcc00;
-            --silver: #e2e8f0;
-            --cyan: #00f2ff;
-            --bg: #0a0a0c;
-            --hp: #2ecc71; 
-            --stamina: #f1c40f;
-            --skill: #9b59b6;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VP 66 | Member Portal</title>
 
-        body {
-            background: var(--bg);
-            color: #eee;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-        }
+<style>
+:root {
+    --primary: #ff003c;
+    --gold: #ffcc00;
+    --silver: #e2e8f0;
+    --cyan: #00f2ff;
+    --bg: #0a0a0c;
+    --hp: #2ecc71;
+    --stamina: #f1c40f;
+    --skill: #9b59b6;
+}
 
-        /* --- NAVIGATION --- */
-        nav {
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 2px solid var(--primary);
-            display: flex;
-            justify-content: center;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        .nav-container { display: flex; }
-        .nav-item { position: relative; }
-        .nav-link {
-            color: white; text-decoration: none; padding: 20px 25px;
-            display: block; font-weight: 900; text-transform: uppercase;
-            letter-spacing: 3px; cursor: pointer;
-        }
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: radial-gradient(circle at 20% 30%, rgba(255,0,60,0.15), transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0,242,255,0.15), transparent 40%),
+                var(--bg);
+    color: #eee;
+    overflow-x: hidden;
+}
 
-        .dropdown-kasta {
-            position: absolute; top: 100%; left: 0; background: #000;
-            min-width: 220px; display: none; border: 1px solid #333;
-        }
+/* NAV */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(20px);
+    border-bottom: 2px solid var(--primary);
+    display: flex;
+    justify-content: center;
+    z-index: 999;
+}
 
-        .nav-item:hover > .dropdown-kasta { display: block; }
-        .kasta-item { position: relative; border-bottom: 1px solid #222; }
-        .dropdown-nama {
-            position: absolute; top: 0; left: 100%; background: #050505;
-            min-width: 200px; display: none; border-left: 2px solid var(--primary);
-        }
+.nav-container { display: flex; }
 
-        .kasta-item:hover .dropdown-nama { display: block; }
-        .kasta-item > a, .dropdown-nama a {
-            padding: 15px 20px; display: block; color: #888; text-decoration: none; font-size: 0.8rem;
-            transition: 0.2s; cursor: pointer; text-transform: uppercase;
-        }
-        .dropdown-nama a:hover { background: var(--primary); color: #fff; font-weight: bold; }
+.nav-item { position: relative; }
 
-        /* --- PAGE SYSTEM --- */
-        .page {
-            display: none; padding: 150px 20px 60px; min-height: 100vh;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-        .page.active { display: block; }
+.nav-link {
+    display: block;
+    padding: 18px 22px;
+    color: white;
+    text-decoration: none;
+    font-weight: 900;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+/* DROPDOWN */
+.dropdown-kasta {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: black;
+    min-width: 220px;
+    display: none;
+    border: 1px solid #333;
+}
 
-        /* --- HOME --- */
-        #home { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .logo-main { 
-            font-size: clamp(4rem, 20vw, 12rem); font-weight: 900; 
-            color: #fff; text-shadow: 5px 5px var(--primary);
-            cursor: pointer; transition: 0.3s; margin: 0;
-        }
-        .logo-main:hover { transform: scale(1.05); text-shadow: 0 0 30px var(--primary); }
-        .sub-text { letter-spacing: 10px; color: var(--primary); font-weight: bold; margin-top: 10px; }
+.nav-item:hover .dropdown-kasta { display: block; }
 
-        /* --- PROFILE LAYOUT --- */
-        .profile-grid {
-            max-width: 1100px; margin: 0 auto;
-            display: grid; grid-template-columns: 350px 1fr; gap: 60px;
-        }
+.kasta-item {
+    position: relative;
+    border-bottom: 1px solid #222;
+}
 
-        .photo-side img {
-            width: 100%; border-radius: 5px; border: 1px solid #444;
-            box-shadow: 10px 10px 0px var(--primary);
-        }
+.dropdown-nama {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    min-width: 200px;
+    background: #050505;
+    display: none;
+    border-left: 2px solid var(--primary);
+}
 
-        /* --- STAT BARS --- */
-        .stat-container { margin-top: 25px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 5px; border: 1px solid #222; }
-        .stat-row { margin-bottom: 12px; }
-        .stat-label { font-size: 0.65rem; color: #777; font-weight: 900; text-transform: uppercase; display: flex; justify-content: space-between; }
-        .stat-label span:last-child { color: #fff; }
-        .bar-outer { background: #111; height: 8px; margin-top: 5px; border-radius: 10px; border: 1px solid #333; overflow: hidden; }
-        .bar-inner { height: 100%; width: 0; transition: 2s cubic-bezier(0.1, 0, 0.2, 1); }
-        
-        .hp-bar { background: var(--hp); }
-        .stamina-bar { background: var(--stamina); }
-        .skill-bar { background: var(--skill); }
+.kasta-item:hover .dropdown-nama {
+    display: block;
+}
 
-        .info-side h1 { font-size: 4rem; margin: 0; font-weight: 900; color: #fff; border-bottom: 5px solid var(--primary); display: inline-block; }
-        .rank-tag { display: block; margin-top: 10px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; }
-        .content-block { margin-top: 30px; }
-        .content-block h3 { color: var(--primary); text-transform: uppercase; font-size: 0.8rem; margin-bottom: 5px; letter-spacing: 1px; }
-        .content-block p { color: #bbb; line-height: 1.6; font-size: 1rem; margin: 0; }
-        
-        .kill-list { list-style: none; padding: 0; margin-top: 10px; }
-        .kill-list li { padding: 8px; background: rgba(255,0,60,0.05); border-left: 4px solid var(--primary); margin-bottom: 5px; font-family: monospace; font-size: 0.85rem; color: #ff94ab; }
+.kasta-item > a,
+.dropdown-nama a {
+    display: block;
+    padding: 12px 15px;
+    font-size: 12px;
+    color: #aaa;
+    text-decoration: none;
+    cursor: pointer;
+}
 
-        @media (max-width: 850px) { .profile-grid { grid-template-columns: 1fr; } .info-side h1 { font-size: 2.5rem; } }
-    </style>
+.dropdown-nama a:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* PAGE SYSTEM */
+.page {
+    display: none;
+    padding: 120px 20px 60px;
+    min-height: 100vh;
+    animation: fadeIn .4s ease;
+}
+
+.page.active { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HOME */
+#home {
+    text-align: center;
+}
+
+.logo-main {
+    font-size: clamp(3rem, 12vw, 10rem);
+    font-weight: 900;
+    color: white;
+    text-shadow: 0 0 25px var(--primary);
+    cursor: pointer;
+}
+
+.sub-text {
+    color: var(--primary);
+    letter-spacing: 10px;
+}
+
+/* PROFILE */
+.profile-grid {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 50px;
+    background: rgba(255,255,255,0.02);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #222;
+}
+
+.photo-side img {
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid #444;
+    box-shadow: 0 0 20px rgba(255,0,60,0.4);
+}
+
+/* STAT */
+.stat-container {
+    margin-top: 20px;
+}
+
+.stat-row { margin-bottom: 10px; }
+
+.stat-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #777;
+    font-weight: 700;
+}
+
+.bar-outer {
+    height: 8px;
+    background: #111;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.bar-inner {
+    height: 100%;
+    width: 0;
+    transition: 2s ease;
+}
+
+.hp-bar { background: var(--hp); }
+.stamina-bar { background: var(--stamina); }
+.skill-bar { background: var(--skill); }
+
+/* INFO */
+.info-side h1 {
+    font-size: 3rem;
+    margin: 0;
+    border-bottom: 4px solid var(--primary);
+    display: inline-block;
+}
+
+.rank-tag {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.content-block { margin-top: 20px; }
+
+.content-block h3 {
+    color: var(--primary);
+    margin: 0;
+}
+
+.content-block p {
+    color: #bbb;
+    line-height: 1.5;
+}
+
+.kill-list {
+    list-style: none;
+    padding: 0;
+}
+
+.kill-list li {
+    padding: 6px;
+    border-left: 3px solid var(--primary);
+    background: rgba(255,0,60,0.05);
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 850px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <nav>
-        <div class="nav-container">
-            <div class="nav-item"><a onclick="showPage('home')" class="nav-link">Home</a></div>
-            <div class="nav-item">
-                <a class="nav-link">Anggota ▼</a>
-                <div class="dropdown-kasta">
-                    <div class="kasta-item">
-                        <a style="color:var(--gold)">👑 PENGUASA</a>
-                        <div class="dropdown-nama">
-                            <a onclick="showPage('p1')">GUZO</a>
-                            <a onclick="showPage('p2')">LUIGI</a>
-                        </div>
+<!-- TETAP PUNYA KAMU (TIDAK DIUBAH SAMA SEKALI) -->
+<nav>
+    <div class="nav-container">
+        <div class="nav-item"><a onclick="showPage('home')" class="nav-link">Home</a></div>
+        <div class="nav-item">
+            <a class="nav-link">Anggota ▼</a>
+            <div class="dropdown-kasta">
+                <div class="kasta-item">
+                    <a style="color:var(--gold)">👑 PENGUASA</a>
+                    <div class="dropdown-nama">
+                        <a onclick="showPage('p1')">GUZO</a>
+                        <a onclick="showPage('p2')">LUIGI</a>
                     </div>
-                    <div class="kasta-item">
-                        <a style="color:var(--silver)">⚔️ JENDRAL</a>
-                        <div class="dropdown-nama"><a onclick="showPage('j1')">SALIM</a></div>
-                    </div>
-                    <div class="kasta-item">
-                        <a style="color:var(--cyan)">🔥 PANGLIMA</a>
-                        <div class="dropdown-nama">
-                            <a onclick="showPage('pa1')">ABRAHAM</a>
-                            <a onclick="showPage('pa2')">GABRIEL</a>
-                            <a onclick="showPage('pa3')">KELVIN</a>
-                            <a onclick="showPage('pa4')">IGNACIO</a>
-                        </div>
+                </div>
+                <div class="kasta-item">
+                    <a style="color:var(--silver)">⚔️ JENDRAL</a>
+                    <div class="dropdown-nama"><a onclick="showPage('j1')">SALIM</a></div>
+                </div>
+                <div class="kasta-item">
+                    <a style="color:var(--cyan)">🔥 PANGLIMA</a>
+                    <div class="dropdown-nama">
+                        <a onclick="showPage('pa1')">ABRAHAM</a>
+                        <a onclick="showPage('pa2')">GABRIEL</a>
+                        <a onclick="showPage('pa3')">KELVIN</a>
+                        <a onclick="showPage('pa4')">IGNACIO</a>
                     </div>
                 </div>
             </div>
         </div>
-    </nav>
-
-    <div id="home" class="page active">
-        <h1 class="logo-main" onclick="showPage('home')">VP 66</h1>
-        <p class="sub-text">VICTORY PRIDE</p>
     </div>
+</nav>
 
-    <div id="member-container"></div>
+<div id="home" class="page active">
+    <h1 class="logo-main" onclick="showPage('home')">VP 66</h1>
+    <p class="sub-text">VICTORY PRIDE</p>
+</div>
 
-    <script>
-        const members = [
+<div id="member-container"></div>
+
+<script>
+ const members = [
             { 
                 id: 'p1', name: 'GUZO', rank: 'PENGUASA', color: '--gold', hp: '100%', st: '95%', sk: '100%', skName: 'AUTHORITY', img: 'https://image2url.com/r2/default/images/1773818996702-1be2ce2f-2c90-42c6-9e12-057220153f14.jpg',
-                sikap: 'tidak takut siapapun kecuali TUHAN YME, perkataan beliau adalah mutlak, tidak dapat dibantah jika dibantah seseorang itu akan di teleport ke toilet bawah secara tiba tiba dan....',
+                desk: 'tidak takut siapapun kecuali TUHAN YME, perkataan beliau adalah mutlak, tidak dapat dibantah jika dibantah seseorang itu akan di teleport ke toilet bawah secara tiba tiba dan....',
                 kekuatan: 'tendangan muaycroy, hook monyet, dapat menlport orang seecara tidak terbatas',
                 catatan: ['dicari pa riko karena memakai mic dan mengumumkan semua murid untuk ke WJ setelah sekolah', 'kabur dari acara pramuka dan ditemukan oleh satpam sedeang ngelem dan nyinte', 'berantam diluar skolah hingga dijuluki Railway Outlaw']
             },
             { 
                 id: 'p2', name: 'LUIGI', rank: 'PENGUASA', color: '--gold', hp: '90%', st: '85%', sk: '98%', skName: 'INTELLECT', img: 'https://image2url.com/r2/default/images/1773819080532-62fa2fe8-27d9-4ef2-b584-d89057fa33fa.jpg',
-                sikap: 'Dingin dan penuh perhitungan. Luigi adalah otak di balik ekspansi wilayah VP 66.',
-                kekuatan: 'JJ',
-                catatan: ['Cyber Syndicate Leader', 'Eksportir Gelap Jalur Utara']
+                desk: 'walaupun sedikit gay tapi beliau pecinta kebeebasan. Luigi adalah otak di balik ekspansi wilayah VP 66.',
+                kekuatan: 'JJ, koneksi luas, dapat memunculkan transportasi',
+                catatan: ['menghina sang mahaguru YUlius M.S', 'sang revolusioner']
             },
             { 
-                id: 'j1', name: 'SALIM', rank: 'JENDRAL', color: '--silver', hp: '95%', st: '90%', sk: '92%', skName: 'LEADERSHIP', img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Salim',
-                sikap: 'Disiplin tinggi dan setia kawan. Salim adalah jembatan antara Penguasa dan para Panglima.',
-                kekuatan: 'Ahli persenjataan berat dan koordinasi serangan berskala besar.',
-                catatan: ["Batalyon Tentara Bayaran 'Iron Fist'", 'Penghianat Internal VP 66']
+                id: 'j1', name: 'SALIM', rank: 'JENDRAL', color: '--silver', hp: '95%', st: '90%', sk: '92%', skName: 'LEADERSHIP', img: 'https://www.image2url.com/r2/default/images/1776086374934-801d0353-bfe5-40d6-be81-a6f33107c610.jpg',
+                desk: 'Raja Provokator yang sudah lama hilang, perkataanya adalah muthlak',
+                kekuatan: 'muay thai tingkat naga aliran zhao diwariskan langsung oleh sang naga hitam filter yunzhao',
+                catatan: ["hampir diusir mamanya", 'pernah bentrok dengan mahaGURU  MARGO']
             },
             { 
-                id: 'pa1', name: 'ABRAHAM', rank: 'PANGLIMA', color: '--cyan', hp: '98%', st: '100%', sk: '95%', skName: 'COMBAT', img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Eky',
-                sikap: 'Agresif dan berani. Tidak pernah mundur selangkah pun dalam menjaga kehormatan VP 66.',
-                kekuatan: 'Ahli beladiri taktis dan serangan frontal cepat.',
-                catatan: ['Leader Geng Srigala Hitam', 'Pasukan Elit Bayangan']
+                id: 'pa1', name: 'ABRAHAM', rank: 'PANGLIMA', color: '--cyan', hp: '98%', st: '100%', sk: '95%', skName: 'COMBAT', img: 'https://www.image2url.com/r2/default/images/1776087783397-6ad91de5-4c3f-44ee-97c3-5cd477537e17.jpg',
+                desk: 'MANUSIA pertama yang membuat sang ismohiel menjadi gay, ia seperti itu karena eplih membuat tindakan yang merusak hatinya.',
+                kekuatan: 'bisa memanipulasi cinta [termasuk laki laki dan perempuan] dan bisa membuat musuh terhipnotis untuk by one ff.',
+                catatan: ['balap liar yang disebabkan epleh', 'lebih pilih mainff dari pada belajar [FF SAMPAI MATI]']
             },
             { 
-                id: 'pa2', name: 'GABRIEL', rank: 'PANGLIMA TEMPUR', color: '--cyan', hp: '92%', st: '88%', sk: '97%', skName: 'SPEED', img: 'https://image2url.com/r2/default/images/1773819124630-84bf3881-2363-42d1-805c-8890f5f594b3.jpg',
-                sikap: 'Sedikit Gay, pencinta perempuan gempal, jagoan tangga uks, biasanya dijuluki pembantai kesiswaan',
+                id: 'pa2', name: 'GABRIEL', rank: 'PANGLIMA TEMPUR', color: '--cyan', hp: '92%', st: '88%', sk: '97%', skName: 'SPEED', img: 'https://www.image2url.com/r2/default/images/1776086306135-6398699a-fbe0-44f0-a58f-d294aeb5ad6c.jpg',
+                desk: 'Sedikit Gay, pencinta perempuan gempal, jagoan tangga uks, biasanya dijuluki pembantai kesiswaan',
                 kekuatan: 'bisa merobohkan tembok zulkarnain, dapat memanggil yangtuj dan makjuj.',
-                catatan: ['p#k yul1#$[penguasa kubu mate]', 'kelah hefanyah[sang penghancur hati ipril]']
+                catatan: ['membuat kayla zefanyahj muntah 77x', 'membuat sang ratu bahasa bu ICA mengamuk dengan melaporkannyake mamanya', 'berbohong kemamanya ingin ngambil baju tapi sebenernya balap liar']
             },
             { 
                 id: 'pa3', name: 'KELVIN', rank: 'PANGLIMA TEMPUR', color: '--cyan', hp: '100%', st: '100%', sk: '90%', skName: 'STAMINA', img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kelvin',
-                sikap: 'Pantang menyerah dan keras kepala. Kelvin adalah benteng berjalan bagi rekan-rekannya.',
+                desk: 'Pantang menyerah dan keras kepala. Kelvin adalah benteng berjalan bagi rekan-rekannya.',
                 kekuatan: 'Ketahanan fisik luar biasa dan ahli dalam pertarungan jalanan brutal.',
                 catatan: ['The Butcher of Underground', "Geng Motor 'Red Skulls'"]
             },
             { 
                 id: 'pa4', name: 'IGNACIO', rank: 'PANGLIMA TEMPUR', color: '--cyan', hp: '85%', st: '92%', sk: '94%', skName: 'PRECISION', img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ignacio',
-                sikap: 'Elegan namun mematikan. Ignacio percaya bahwa serangan yang efektif adalah satu serangan yang tepat sasaran.',
+                desk: 'Elegan namun mematikan. Ignacio percaya bahwa serangan yang efektif adalah satu serangan yang tepat sasaran.',
                 kekuatan: 'Ahli senjata tajam dan serangan titik vital.',
                 catatan: ["Master Duel Pedang 'Kuro'", 'Penyusup Black Ops']
             }
@@ -234,8 +353,8 @@
                             <span class="rank-tag" style="color:var(${m.color})">KASTA: ${m.rank}</span>
                             <h1>${m.name}</h1>
                             <div class="content-block">
-                                <h3>Sikap</h3>
-                                <p>${m.sikap}</p>
+                                <h3>desk</h3>
+                                <p>${m.desk}</p>
                             </div>
                             <div class="content-block">
                                 <h3>Kekuatan</h3>
